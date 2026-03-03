@@ -15,3 +15,7 @@ add_executable(metroidvania ${SRC})
 
 target_include_directories(metroidvania PRIVATE ${INCROOT})
 
+find_package(SFML 3.0 COMPONENTS Audio Graphics Window System REQUIRED)
+
+target_link_libraries(metroidvania sfml-audio sfml-graphics sfml-window sfml-system)
+
