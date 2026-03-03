@@ -3,9 +3,7 @@
 
   inputs.nixpkgs.url = "https://flakehub.com/f/NixOS/nixpkgs/0"; # stable Nixpkgs
 
-  outputs =
-    { self, ... }@inputs:
-
+  outputs = { self, ... }@inputs:
     let
       supportedSystems = [
         "x86_64-linux"
@@ -26,24 +24,22 @@
       devShells = forEachSupportedSystem (
         { pkgs }:
         {
-          default =
-            pkgs.mkShell.override
-              {
-                # Override stdenv in order to change compiler:
-                # stdenv = pkgs.clangStdenv;
-              }
-              {
-                packages =
-                  with pkgs;
-                  [
-                    clang-tools
-                    cmake
-                    cppcheck
-                    vcpkg
-                    vcpkg-tool
-                  ]
-                  ++ (if stdenv.hostPlatform.system == "aarch64-darwin" then [ ] else [ gdb ]);
-              };
+          default = pkgs.mkShell.override {
+            # Override stdenv in order to change compiler:
+            # stdenv = pkgs.clangStdenv;
+          }
+          {
+            packages = with pkgs; [
+              clang-tools
+              cmake
+              cppcheck
+              vcpkg
+              vcpkg-tool
+
+              # Development libraries
+              sfml
+            ] ++ (if stdenv.hostPlatform.system == "aarch64-darwin" then [ ] else [ gdb ]);
+          };
         }
       );
     };
