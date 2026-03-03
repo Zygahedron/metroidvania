@@ -1,2 +1,2 @@
 cd "$(dirname "$0")"
-cmake -S . -B build && make -C build
+cmake -B build && cmake --build build
