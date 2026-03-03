@@ -1,10 +1,17 @@
 cmake_minimum_required(VERSION 4.1)
-project(metroidvania VERSION 0.1 LANGUAGES CXX C)
+project(
+  metroidvania
+  VERSION 0.1
+  LANGUAGES CXX C
+)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED true)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 set(HEADER_DIR "${PROJECT_SOURCE_DIR}/include")
 set(HEADER_LIST
+  "${HEADER_DIR}/common.hpp"
 )
 source_group(
   TREE "${PROJECT_SOURCE_DIR}/include"
