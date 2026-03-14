@@ -3,6 +3,8 @@
 
 #include <cstdint>
 
+#include <SFML/System/Vector2.hpp>
+
 namespace laz
 {
 
@@ -21,6 +23,11 @@ using i64 = int64_t;
 // floating point
 using f32 = float;
 using f64 = double;
+
+// SFML vectors
+using v2u = sf::Vector2u;
+using v2i = sf::Vector2i;
+using v2f = sf::Vector2f;
 
 }
 

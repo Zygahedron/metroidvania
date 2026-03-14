@@ -38,6 +38,7 @@
 
               # Development libraries
               sfml
+              yaml-cpp
             ] ++ (if stdenv.hostPlatform.system == "aarch64-darwin" then [ ] else [ gdb ]);
           };
         }

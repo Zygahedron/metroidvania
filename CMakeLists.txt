@@ -12,6 +12,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(HEADER_DIR "${PROJECT_SOURCE_DIR}/include")
 set(HEADER_LIST
   "${HEADER_DIR}/common.hpp"
+  "${HEADER_DIR}/player.hpp"
+  "${HEADER_DIR}/tilemap.hpp"
 )
 source_group(
   TREE "${PROJECT_SOURCE_DIR}/include"
@@ -22,6 +24,8 @@ source_group(
 set(SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
 set(SOURCE_LIST
   "${SOURCE_DIR}/main.cpp"
+  "${SOURCE_DIR}/player.cpp"
+  "${SOURCE_DIR}/tilemap.cpp"
 )
 source_group(
   TREE "${PROJECT_SOURCE_DIR}/src"
