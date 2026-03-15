@@ -13,11 +13,12 @@
 
 namespace laz
 {
+class Tileset;
 
 class Tilemap : public sf::Drawable, public sf::Transformable
 {
 public:
-  Tilemap(const v2u& mapSize, const sf::Texture& tilemap, const std::vector<u16>& tiles);
+  Tilemap(const v2u& mapSize, const Tileset* tileset, const std::vector<u16>& tiles);
   ~Tilemap();
 
   const v2u& getMapSize();
@@ -26,15 +27,15 @@ public:
   u16  getTile(u16 x, u16 y);
   void setTile(u16 x, u16 y, u16 tile);
 
-  const sf::Texture& getTileset();
-  void               setTileset(const sf::Texture& tileset);
+  const Tileset& getTileset();
+  void           setTileset(const Tileset* tileset);
 
 private:
   v2u _mapSize;
   std::vector<u16> _tiles;
 
   sf::VertexArray _vertices;
-  sf::Texture _tileset;
+  const Tileset* _tileset;
 
   void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

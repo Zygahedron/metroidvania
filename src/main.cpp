@@ -5,36 +5,47 @@
 #include <SFML/Window/VideoMode.hpp>
 
 #include "common.hpp"
+#include "asset_manager.hpp"
 #include "player.hpp"
 #include "tilemap.hpp"
+#include "tileset.hpp"
+
+const laz::u16 RESOLUTION_X = 640;
+const laz::u16 RESOLUTION_Y = 360;
+const laz::u16 RESOLUTION_SCALE = 2;
 
 int main(int argc, char* argv[])
 {
   sf::RenderWindow* window =
     new sf::RenderWindow(
-      sf::VideoMode({ 800, 600 }),
+      sf::VideoMode({ RESOLUTION_X * RESOLUTION_SCALE, RESOLUTION_Y * RESOLUTION_SCALE }),
       "test",
-      sf::Style::Titlebar | sf::Style::Close
+      sf::Style::Titlebar | sf::Style::Close,
+      sf::State::Windowed
     );
-  sf::View* view = new sf::View({ 0.f, 0.f }, { 80.f, 60.f });
+  sf::View* view = new sf::View({ 0.f, 0.f }, { RESOLUTION_X, RESOLUTION_Y });
   window->setView(*view);
 
   laz::Player player;
   player.setOrigin({ 4.0f, 4.0f });
   player.setPosition({ 0.f, 0.f });
 
-  sf::Texture* tileset = new sf::Texture("assets/tileset.png");
+  laz::AssetManager<laz::Tileset> tilesetManager = laz::AssetManager<laz::Tileset>("assets/tilesets", ".yaml");
+  tilesetManager.load("test");
+
   std::vector<laz::u16>* tiles = new std::vector<laz::u16>{
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+    2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+    2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+    2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+    2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+    2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+    2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+    2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+    2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+    2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
   };
-  laz::Tilemap* tilemap = new laz::Tilemap({10, 8}, *tileset, *tiles);
+  laz::Tilemap* tilemap = new laz::Tilemap({10, 10}, &tilesetManager.get("test"), *tiles);
   tilemap->setOrigin({ 40.f, 32.f });
 
   std::cout << "Hello world!" << std::endl;
@@ -55,7 +66,6 @@ int main(int argc, char* argv[])
 
   delete tilemap;
   delete tiles;
-  delete tileset;
   delete view;
   delete window;
 

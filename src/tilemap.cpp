@@ -1,12 +1,11 @@
 #include "tilemap.hpp"
 
+#include "tileset.hpp"
+
 namespace laz
 {
 
-const u8 TILESIZE_X = 8;
-const u8 TILESIZE_Y = 8;
-
-Tilemap::Tilemap(const v2u& mapSize, const sf::Texture& tileset, const std::vector<u16>& tiles)
+Tilemap::Tilemap(const v2u& mapSize, const Tileset* tileset, const std::vector<u16>& tiles)
   : _mapSize(mapSize), _tiles(tiles), _vertices(), _tileset(tileset)
 {
   this->_vertices.setPrimitiveType(sf::PrimitiveType::Triangles);
@@ -17,25 +16,27 @@ Tilemap::Tilemap(const v2u& mapSize, const sf::Texture& tileset, const std::vect
     for (u32 x = 0; x < this->_mapSize.x; x++)
     {
       const u16 tile = this->_tiles[x + (y * this->_mapSize.x)];
+      const v2u tileSize = this->_tileset->getTileSize();
+      const v2u tilesetSize = this->_tileset->getTexture().getSize();
 
-      const i32 tu = tile % (this->_tileset.getSize().x / TILESIZE_X);
-      const i32 tv = tile / (this->_tileset.getSize().x / TILESIZE_X);
+      const i32 tu = tile % (tilesetSize.x / tileSize.x);
+      const i32 tv = tile / (tilesetSize.x / tileSize.x);
 
-      sf::Vertex* triangles = &this->_vertices[(x + (y * this->_mapSize.y)) * 6];
+      sf::Vertex* triangles = &this->_vertices[(x + (y * this->_mapSize.x)) * 6];
 
-      triangles[0].position = v2f(x * TILESIZE_X, y * TILESIZE_Y);
-      triangles[1].position = v2f((x + 1) * TILESIZE_X, y * TILESIZE_Y);
-      triangles[2].position = v2f(x * TILESIZE_X, (y + 1) * TILESIZE_Y);
-      triangles[3].position = v2f(x * TILESIZE_X, (y + 1) * TILESIZE_Y);
-      triangles[4].position = v2f((x + 1) * TILESIZE_X, y * TILESIZE_Y);
-      triangles[5].position = v2f((x + 1) * TILESIZE_X, (y + 1) * TILESIZE_Y);
+      triangles[0].position = v2f(x * tileSize.x, y * tileSize.y);
+      triangles[1].position = v2f((x + 1) * tileSize.x, y * tileSize.y);
+      triangles[2].position = v2f(x * tileSize.x, (y + 1) * tileSize.y);
+      triangles[3].position = v2f(x * tileSize.x, (y + 1) * tileSize.y);
+      triangles[4].position = v2f((x + 1) * tileSize.x, y * tileSize.y);
+      triangles[5].position = v2f((x + 1) * tileSize.x, (y + 1) * tileSize.y);
 
-      triangles[0].texCoords = v2f(tu * TILESIZE_X, tv * TILESIZE_Y);
-      triangles[1].texCoords = v2f((tu + 1) * TILESIZE_X, tv * TILESIZE_Y);
-      triangles[2].texCoords = v2f(tu * TILESIZE_X, (tv + 1) * TILESIZE_Y);
-      triangles[3].texCoords = v2f(tu * TILESIZE_X, (tv + 1) * TILESIZE_Y);
-      triangles[4].texCoords = v2f((tu + 1) * TILESIZE_X, tv * TILESIZE_Y);
-      triangles[5].texCoords = v2f((tu + 1) * TILESIZE_X, (tv + 1) * TILESIZE_Y);
+      triangles[0].texCoords = v2f(tu * tileSize.x, tv * tileSize.y);
+      triangles[1].texCoords = v2f((tu + 1) * tileSize.x, tv * tileSize.y);
+      triangles[2].texCoords = v2f(tu * tileSize.x, (tv + 1) * tileSize.y);
+      triangles[3].texCoords = v2f(tu * tileSize.x, (tv + 1) * tileSize.y);
+      triangles[4].texCoords = v2f((tu + 1) * tileSize.x, tv * tileSize.y);
+      triangles[5].texCoords = v2f((tu + 1) * tileSize.x, (tv + 1) * tileSize.y);
     }
   }
 }
@@ -65,14 +66,14 @@ void Tilemap::setTile(u16 x, u16 y, u16 tile)
   this->_tiles[x + (y * this->_mapSize.x)] = tile;
 }
 
-const sf::Texture& Tilemap::getTileset()                           { return this->_tileset; }
-void               Tilemap::setTileset(const sf::Texture& tileset) { this->_tileset = tileset; }
+const Tileset& Tilemap::getTileset()                       { return *this->_tileset; }
+void           Tilemap::setTileset(const Tileset* tileset) { this->_tileset = tileset; }
 
 void Tilemap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
   states.transform *= this->getTransform();
 
-  states.texture = &this->_tileset;
+  states.texture = &this->_tileset->getTexture();
 
   target.draw(this->_vertices, states);
 }

@@ -12,8 +12,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(HEADER_DIR "${PROJECT_SOURCE_DIR}/include")
 set(HEADER_LIST
   "${HEADER_DIR}/common.hpp"
+  "${HEADER_DIR}/asset_manager.hpp"
   "${HEADER_DIR}/player.hpp"
   "${HEADER_DIR}/tilemap.hpp"
+  "${HEADER_DIR}/tileset.hpp"
 )
 source_group(
   TREE "${PROJECT_SOURCE_DIR}/include"
@@ -24,8 +26,10 @@ source_group(
 set(SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
 set(SOURCE_LIST
   "${SOURCE_DIR}/main.cpp"
+  "${SOURCE_DIR}/asset_manager.cpp"
   "${SOURCE_DIR}/player.cpp"
   "${SOURCE_DIR}/tilemap.cpp"
+  "${SOURCE_DIR}/tileset.cpp"
 )
 source_group(
   TREE "${PROJECT_SOURCE_DIR}/src"
@@ -34,9 +38,11 @@ source_group(
 )
 
 find_package(SFML 3.0.2 COMPONENTS Audio Graphics Window System REQUIRED)
+find_package(spdlog)
+find_package(yaml-cpp)
 
 add_executable(metroidvania ${SOURCE_LIST} ${HEADER_LIST})
 target_include_directories(metroidvania PRIVATE ${HEADER_DIR})
-target_link_libraries(metroidvania SFML::Audio SFML::Graphics SFML::Window SFML::System)
+target_link_libraries(metroidvania SFML::Audio SFML::Graphics SFML::Window SFML::System spdlog::spdlog yaml-cpp)
 
 target_compile_features(metroidvania PRIVATE cxx_std_23)
