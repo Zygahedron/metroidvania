@@ -1,3 +1,4 @@
+#include <SFML/System/Clock.hpp>
 #include <iostream>
 
 #include <vector>
@@ -6,6 +7,7 @@
 
 #include "common.hpp"
 #include "asset_manager.hpp"
+#include "input.hpp"
 #include "player.hpp"
 #include "tilemap.hpp"
 #include "tileset.hpp"
@@ -48,10 +50,17 @@ int main(int argc, char* argv[])
   laz::Tilemap* tilemap = new laz::Tilemap({10, 10}, &tilesetManager.get("test"), *tiles);
   tilemap->setOrigin({ 40.f, 32.f });
 
+  laz::Input input;
+
   std::cout << "Hello world!" << std::endl;
 
+  sf::Clock clock;
   while (window->isOpen())
   {
+    sf::Time deltaTime = clock.restart();
+
+    input.update(deltaTime);
+
     while (const std::optional event = window->pollEvent())
     {
       if (event->is<sf::Event::Closed>())
