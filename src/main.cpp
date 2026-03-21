@@ -12,45 +12,70 @@
 #include "tilemap.hpp"
 #include "tileset.hpp"
 
-const laz::u16 RESOLUTION_X = 640;
-const laz::u16 RESOLUTION_Y = 360;
-const laz::u16 RESOLUTION_SCALE = 2;
+using namespace laz;
+
+const v2u RESOLUTION = { 640, 360 };
+const u32 RESOLUTION_SCALE = 2;
+
+const std::vector<u16>* tiles = new std::vector<u16>{
+  2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+  2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+  2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+  2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+  2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+  2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+  2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+  2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
+  2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+  2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+};
+
+sf::RenderWindow* window;
+sf::View view({ 0.f, 0.f }, (v2f)RESOLUTION);
+
+AssetManager<Tileset>* tilesetManager = new AssetManager<Tileset>("assets/tilesets", ".yaml");
+
+Input* input = new Input();
+
+void onClosed(const sf::Event::Closed& event)
+{
+  window->close();
+}
+
+void onKeyPressed(const sf::Event::KeyPressed& event)
+{
+  input->handleButtonEvent(event.code, true);
+}
+
+void onKeyReleased(const sf::Event::KeyReleased& event)
+{
+  input->handleButtonEvent(event.code, false);
+}
 
 int main(int argc, char* argv[])
 {
-  sf::RenderWindow* window =
+  // Initialize window
+  window =
     new sf::RenderWindow(
-      sf::VideoMode({ RESOLUTION_X * RESOLUTION_SCALE, RESOLUTION_Y * RESOLUTION_SCALE }),
+      sf::VideoMode(RESOLUTION * RESOLUTION_SCALE),
       "test",
       sf::Style::Titlebar | sf::Style::Close,
       sf::State::Windowed
     );
-  sf::View* view = new sf::View({ 0.f, 0.f }, { RESOLUTION_X, RESOLUTION_Y });
-  window->setView(*view);
+  window->setKeyRepeatEnabled(false);
+  window->setView(view);
+  window->setFramerateLimit(60);
 
-  laz::Player player;
+  tilesetManager->load("test");
+
+  Player player;
   player.setOrigin({ 4.0f, 4.0f });
   player.setPosition({ 0.f, 0.f });
 
-  laz::AssetManager<laz::Tileset> tilesetManager = laz::AssetManager<laz::Tileset>("assets/tilesets", ".yaml");
-  tilesetManager.load("test");
-
-  std::vector<laz::u16>* tiles = new std::vector<laz::u16>{
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
-    2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-    2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
-    2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-    2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
-    2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-    2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
-    2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-  };
-  laz::Tilemap* tilemap = new laz::Tilemap({10, 10}, &tilesetManager.get("test"), *tiles);
+  Tilemap* tilemap = new Tilemap({10, 10}, &tilesetManager->get("test"), *tiles);
   tilemap->setOrigin({ 40.f, 32.f });
 
-  laz::Input input;
+  input->loadBindingsFromYAML("p1.yaml");
 
   std::cout << "Hello world!" << std::endl;
 
@@ -59,23 +84,29 @@ int main(int argc, char* argv[])
   {
     sf::Time deltaTime = clock.restart();
 
-    input.update(deltaTime);
+    // Update input first
+    input->update(deltaTime);
 
-    while (const std::optional event = window->pollEvent())
-    {
-      if (event->is<sf::Event::Closed>())
-        window->close();
-    }
+    // Then handle events
+    window->handleEvents(
+      onClosed,
+      onKeyPressed,
+      onKeyReleased
+    );
 
+    // Then udpate game objects
+    player.update(*input, deltaTime);
+
+    // And then draw everything
     window->clear(sf::Color::Magenta);
     window->draw(*tilemap);
     window->draw(player);
+    window->draw(*input);
     window->display();
   }
 
   delete tilemap;
   delete tiles;
-  delete view;
   delete window;
 
   return 0;

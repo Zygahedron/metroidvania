@@ -15,21 +15,6 @@ namespace fs = std::filesystem;
 namespace laz
 {
 
-// Helpers
-YAML::Node readYAML(const std::string& filepath)
-{
-  YAML::Node yaml;
-  try
-  {
-    yaml = YAML::LoadFile(filepath);
-  }
-  catch (std::exception& e)
-  {
-    spdlog::error("Failed to read YAML file '{}': {}", filepath, e.what());
-  }
-  return yaml;
-}
-
 template <>
 Tileset* AssetManager<Tileset>::loadFromFile(const std::string& filepath)
 {

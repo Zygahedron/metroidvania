@@ -27,6 +27,7 @@ source_group(
 set(SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
 set(SOURCE_LIST
   "${SOURCE_DIR}/main.cpp"
+  "${SOURCE_DIR}/common.cpp"
   "${SOURCE_DIR}/asset_manager.cpp"
   "${SOURCE_DIR}/input.cpp"
   "${SOURCE_DIR}/player.cpp"

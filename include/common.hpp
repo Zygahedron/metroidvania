@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include <SFML/System/Vector2.hpp>
+#include <yaml-cpp/node/node.h>
 
 namespace laz
 {
@@ -28,6 +29,8 @@ using f64 = double;
 using v2u = sf::Vector2u;
 using v2i = sf::Vector2i;
 using v2f = sf::Vector2f;
+
+YAML::Node readYAML(const std::string& filepath);
 
 }
 
