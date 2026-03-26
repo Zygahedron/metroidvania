@@ -24,12 +24,15 @@ private:
   sf::RectangleShape _rectangle;
 
   // state
+  bool _grounded = false;
 
   v2f _velocity          = { 0.f, 0.f };
+
   v2f _maxSpeed          = { 128.f, 64.f };
   f32 _gravityMultiplier = 1.f;
   f32 _acceleration      = this->_maxSpeed.x * 4.f;
   f32 _friction          = this->_maxSpeed.x * 4.f;
+  f32 _jumpStrength      = 200.f;
 
   void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
