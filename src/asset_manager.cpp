@@ -37,11 +37,12 @@ Tileset* AssetManager<Tileset>::loadFromFile(const std::string& filepath)
     Tileset::TileData data;
     YAML::Node node = it->as<YAML::Node>();
 
+    using Collision = Tileset::TileData::CollisionTypes;
     std::string collision = node["collision-type"].as<std::string>();
     if (collision == "none")
-      data.collisionType = Tileset::TileData::CollisionTypes::None;
+      data.collisionType = Collision::None;
     else if (collision == "solid")
-      data.collisionType = Tileset::TileData::CollisionTypes::Solid;
+      data.collisionType = Collision::Solid;
 
     tileData.push_back(data);
   }
@@ -51,7 +52,5 @@ Tileset* AssetManager<Tileset>::loadFromFile(const std::string& filepath)
 
   return tileset;
 }
-
-
 
 }

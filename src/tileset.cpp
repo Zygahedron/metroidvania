@@ -23,9 +23,16 @@ const sf::Texture& Tileset::getTexture() const
 {
   return this->_texture;
 }
-const std::vector<Tileset::TileData> Tileset::getTileData() const
+const std::vector<Tileset::TileData>& Tileset::getTileData() const
 {
   return this->_tileData;
+}
+
+const Tileset::TileData& Tileset::getTileData(u16 tileID) const
+{
+  if (tileID == UINT16_MAX)
+    return this->_tileData[0];
+  return this->_tileData.at(tileID);
 }
 
 }

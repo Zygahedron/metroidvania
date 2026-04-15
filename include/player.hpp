@@ -1,6 +1,7 @@
 #ifndef LAZ_PLAYER_HPP
 #define LAZ_PLAYER_HPP
 
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Transformable.hpp>
@@ -12,15 +13,19 @@ namespace laz
 {
 
 class Input;
+class Tilemap;
 
 class Player : public sf::Drawable, public sf::Transformable
 {
 public:
   Player();
 
-  void update(Input& input, const sf::Time& deltaTime);
+  void update(Input& input, const sf::Time& deltaTime, const Tilemap& tilemap);
+
+  bool checkTileCollision(const Tilemap& tilemap, const v2f offset = v2f());
 
 private:
+  sf::FloatRect _collider;
   sf::RectangleShape _rectangle;
 
   // state
@@ -33,6 +38,8 @@ private:
   f32 _acceleration      = this->_maxSpeed.x * 4.f;
   f32 _friction          = this->_maxSpeed.x * 4.f;
   f32 _jumpStrength      = 200.f;
+
+  const sf::Rect<u16> getTileRect(const Tilemap& tilemap, const v2f offset = v2f()) const;
 
   void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

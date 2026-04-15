@@ -26,6 +26,8 @@ using f32 = float;
 using f64 = double;
 
 // SFML vectors
+template<typename T>
+using v2  = sf::Vector2<T>;
 using v2u = sf::Vector2u;
 using v2i = sf::Vector2i;
 using v2f = sf::Vector2f;

@@ -22,7 +22,8 @@ public:
 
   const v2u& getTileSize() const;
   const sf::Texture& getTexture() const;
-  const std::vector<TileData> getTileData() const;
+  const std::vector<TileData>& getTileData() const;
+  const TileData& getTileData(u16 tileID) const;
 
   struct TileData
   {

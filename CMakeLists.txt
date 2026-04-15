@@ -49,3 +49,13 @@ target_include_directories(metroidvania PRIVATE ${HEADER_DIR})
 target_link_libraries(metroidvania SFML::Audio SFML::Graphics SFML::Window SFML::System spdlog::spdlog yaml-cpp)
 
 target_compile_features(metroidvania PRIVATE cxx_std_23)
+
+set(ASSETS_SOURCE "${CMAKE_SOURCE_DIR}/assets")
+set(ASSETS_DEST "${CMAKE_CURRENT_BINARY_DIR}/assets")
+
+add_custom_command(
+  TARGET ${PROJECT_NAME} POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E create_symlink ${ASSETS_SOURCE} ${ASSETS_DEST}
+  # DEPENDS ${destination}
+  COMMENT "symbolic link assets folder from ${ASSETS_SOURCE} => ${ASSETS_DEST}"
+)

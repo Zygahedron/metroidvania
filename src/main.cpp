@@ -1,9 +1,9 @@
 #include <SFML/System/Clock.hpp>
-#include <iostream>
 
 #include <vector>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/VideoMode.hpp>
+#include <spdlog/spdlog.h>
 
 #include "common.hpp"
 #include "asset_manager.hpp"
@@ -17,17 +17,17 @@ using namespace laz;
 const v2u RESOLUTION = { 640, 360 };
 const u32 RESOLUTION_SCALE = 2;
 
-const std::vector<u16>* tiles = new std::vector<u16>{
-  2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-  2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
-  2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-  2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
-  2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-  2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
-  2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-  2, 0, 0, 0, 0, 0, 0, 0, 0, 2,
-  2, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-  2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+const auto* tiles = new std::vector<std::vector<u16>>{
+  { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
+  { 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, },
+  { 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, },
+  { 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, },
+  { 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, },
+  { 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, },
+  { 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, },
+  { 2, 0, 0, 0, 0, 0, 0, 0, 0, 2, },
+  { 2, 1, 1, 1, 1, 1, 1, 1, 1, 2, },
+  { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, },
 };
 
 sf::RenderWindow* window;
@@ -54,6 +54,7 @@ void onKeyReleased(const sf::Event::KeyReleased& event)
 
 int main(int argc, char* argv[])
 {
+  spdlog::set_level(spdlog::level::debug);
   // Initialize window
   window =
     new sf::RenderWindow(
@@ -69,15 +70,13 @@ int main(int argc, char* argv[])
   tilesetManager->load("test");
 
   Player player;
-  player.setOrigin({ 4.0f, 4.0f });
-  player.setPosition({ 0.f, 0.f });
+  // player.setOrigin({ 4.0f, 4.0f });
+  player.setPosition({ 0.f, -10.1f });
 
-  Tilemap* tilemap = new Tilemap({10, 10}, &tilesetManager->get("test"), *tiles);
-  tilemap->setOrigin({ 40.f, 32.f });
+  Tilemap* tilemap = new Tilemap({ 10, 10 }, &tilesetManager->get("test"), *tiles);
+  // tilemap->setOrigin({ 40.f, 32.f });
 
   input->loadBindingsFromYAML("p1.yaml");
-
-  std::cout << "Hello world!" << std::endl;
 
   sf::Clock clock;
   while (window->isOpen())
@@ -95,7 +94,7 @@ int main(int argc, char* argv[])
     );
 
     // Then udpate game objects
-    player.update(*input, deltaTime);
+    player.update(*input, deltaTime, *tilemap);
 
     // And then draw everything
     window->clear(sf::Color::Magenta);
