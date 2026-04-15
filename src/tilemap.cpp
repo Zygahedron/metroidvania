@@ -1,4 +1,5 @@
 #include "tilemap.hpp"
+#include <cmath>
 
 namespace laz
 {
@@ -63,12 +64,17 @@ void Tilemap::setTile(u16 x, u16 y, u16 tile)
   this->_tiles[y][x] = tile;
 }
 
-v2<u16> Tilemap::getTileCoordAtPosition(v2f pos) const
+v2<u16> Tilemap::getTileCoordAtPosition(v2f pos, bool ceiling) const
 {
   v2f p = pos - this->getPosition();
-  u16 x = p.x / this->_tileset->getTileSize().x;
-  u16 y = p.y / this->_tileset->getTileSize().y;
-  return { x, y };
+  f32 x = p.x / this->_tileset->getTileSize().x;
+  f32 y = p.y / this->_tileset->getTileSize().y;
+  if (ceiling)
+  {
+    x = std::ceil(x);
+    y = std::ceil(y);
+  }
+  return v2<u16>(x, y);
 }
 
 u16 Tilemap::getTileAtPosition(v2f pos) const

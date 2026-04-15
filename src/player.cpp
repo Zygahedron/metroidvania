@@ -177,12 +177,12 @@ const sf::Rect<u16> Player::getTileRect(const Tilemap& tilemap, const v2f offset
 {
   v2f size = this->_collider.size;
   v2f tl = this->getPosition() + offset;
-  v2f br = tl + size - v2f(0.01f, 0.01f);
+  v2f br = tl + size;
 
   v2<u16> tlTile = tilemap.getTileCoordAtPosition(tl);
-  v2<u16> brTile = tilemap.getTileCoordAtPosition(br);
+  v2<u16> brTile = tilemap.getTileCoordAtPosition(br, true);
 
-  v2<u16> tileSize = brTile - tlTile + v2<u16>(1, 1);
+  v2<u16> tileSize = brTile - tlTile;
 
   return sf::Rect<u16>(tlTile, tileSize);
 }

@@ -27,7 +27,7 @@ public:
   u16  getTile(u16 x, u16 y) const;
   void setTile(u16 x, u16 y, u16 tile);
 
-  v2<u16> getTileCoordAtPosition(v2f pos) const;
+  v2<u16> getTileCoordAtPosition(v2f pos, bool ceiling = false) const;
   u16 getTileAtPosition(v2f pos) const;
 
   const Tileset::TileData& getTileData(u16 x, u16 y) const;

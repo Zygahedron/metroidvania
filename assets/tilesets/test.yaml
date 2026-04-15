@@ -6,6 +6,6 @@ tiles:
   - name: empty
     collision-type: none
   - name: floor
-    collision-type: none
-  - name: wall
+    collision-type: solid
+  - name: bricks
     collision-type: solid
