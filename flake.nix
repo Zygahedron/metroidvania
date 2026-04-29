@@ -24,23 +24,17 @@
       devShells = forEachSupportedSystem (
         { pkgs }:
         {
-          default = pkgs.mkShell.override {
-            # Override stdenv in order to change compiler:
-            # stdenv = pkgs.clangStdenv;
-          }
+          default = pkgs.mkShell
           {
-            packages = with pkgs; [
-              clang-tools
-              cmake
-              cppcheck
-              vcpkg
-              vcpkg-tool
+            nativeBuildInputs = with pkgs; [
+              dotnetCorePackages.sdk_9_0
+            ];
+            DOTNET_BIN = "${pkgs.dotnetCorePackages.sdk_9_0}/bin/dotnet";
 
-              # Development libraries
-              sfml
-              spdlog
-              yaml-cpp
-            ] ++ (if stdenv.hostPlatform.system == "aarch64-darwin" then [ ] else [ gdb ]);
+            packages = with pkgs; [
+              omnisharp-roslyn
+              netcoredbg
+            ];
           };
         }
       );
