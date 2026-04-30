@@ -24,10 +24,10 @@ public class Tilemap : Transformable, IDrawable
         {
             Tileset.Tile tile = this.Tiles[x, y];
 
-            float tx = tile.Rect.Left;
-            float ty = tile.Rect.Top;
-            float tu = tile.Rect.Left + tile.Rect.Width;
-            float tv = tile.Rect.Top  + tile.Rect.Height;
+            float tx = tile.TexturePosition.X;
+            float ty = tile.TexturePosition.Y;
+            float tu = tile.TexturePosition.X + tileSize.X;
+            float tv = tile.TexturePosition.Y + tileSize.Y;
 
             this._vertices.Append(new Vertex(new Vector2f(x * tileSize.X, y * tileSize.Y),
                                              new Vector2f(tx,             ty)));

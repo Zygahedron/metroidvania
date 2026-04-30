@@ -9,15 +9,21 @@ public class Tileset(Vector2u tileSize, Texture texture, List<Tileset.Tile> tile
     public Texture    Texture  { get; private init; } = texture;
     public List<Tile> TileData { get; private init; } = tileData;
 
-    public class Tile(FloatRect rect, Tile.CollisionTypes collision = Tile.CollisionTypes.None)
+    public static Tileset Load(string filepath)
+    {
+        
+    }
+
+    public class Tile(string name, Vector2f texturePosition, Tile.CollisionTypes collision = Tile.CollisionTypes.None)
     {
         public enum CollisionTypes : byte
         {
             None,
             Solid,
-        };
+        }
 
-        public FloatRect      Rect          { get; init; } = rect;
-        public CollisionTypes CollisionType { get; init; } = collision;
+        public string         Name            { get; } = name;
+        public Vector2f       TexturePosition { get; } = texturePosition;
+        public CollisionTypes CollisionType   { get; } = collision;
     }
 }
